@@ -1,14 +1,17 @@
-
+////////////////////////////
+// forgive for low quality, some parts were written in a hurry
 var totalShown=0;
 
+var amountToShow = 20;
 
 displayMore();
+
 gid("displaymore-btn").onclick=function(){
   displayMore();
 };
-
-
-async function generate(id,c,x) {
+/////////////////
+async function generate(id,c) {
+    x = c.getContext("2d")
     c.width|=0;
 
     x.fillStyle = "white";
@@ -61,23 +64,29 @@ async function generate(id,c,x) {
     }
 }
 
-
 async function displayMore() {
-  var c,x,a;
-  for (var i=0;i<5;i++) {
-    c = document.createElement("canvas");
-    c.width="1024";
-    c.height="1024";
-    c.setAttribute("data-id",totalShown+1);
-    x = c.getContext("2d");
-    await generate(totalShown+1,c,x)
-    gid("container").appendChild(c);
-
+  var canvas,a,img,currentID,wrapper,seed;
+  for (var i=0;i<amountToShow;i++) {
+    wrapper = document.createElement("div");
+    wrapper.classList.add("wrapper");
+    currentID = totalShown+1;
+    canvas = document.createElement("canvas");
+    canvas.width="1024";
+    canvas.height="1024";
+    canvas.setAttribute("data-id",currentID);
+    await generate(currentID,canvas)
+    img = document.createElement("img");
+    img.src = canvas.toDataURL("image/png");
+    seed = document.createElement("h4");
+    seed.textContent="Seed : "+currentID;
+    wrapper.appendChild(seed);
+    wrapper.appendChild(img);
     a = document.createElement("a");
-    a.textContent="^ Download ASCII for - "+(totalShown+1);
-    a.href="results/"+(totalShown+1)+".txt";
-    a.download=(totalShown+1)+".txt";
-    gid("container").appendChild(a);
+    a.textContent="^ Download ASCII for - "+(currentID);
+    a.href="results/"+(currentID)+".txt";
+    a.download=(currentID)+".txt";
+    wrapper.appendChild(a);
+    gid("container").appendChild(wrapper);
     totalShown++;
   }
 }

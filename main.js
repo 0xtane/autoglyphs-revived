@@ -1,8 +1,11 @@
 ////////////////////////////
 // forgive for low quality, some parts were written in a hurry
-var totalShown = 0;
+window.data={};
+window.data.displaying=false;
+window.data.totalShown = 0;
 
-var amountToShow = 60;
+const amountToShow = 100;
+
 
 displayMore();
 
@@ -68,14 +71,20 @@ async function generate(id, c) {
 			x.stroke();
 		}
 	}
+	return;
 }
 
 async function displayMore() {
+	if (data.displaying) {
+		console.log("previous function call still running");
+		return;
+	}
+	data.displaying=true;
 	var canvas, a, img, currentID, wrapper, seed;
 	for (var i = 0; i < amountToShow; i++) {
 		wrapper = document.createElement("div");
 		wrapper.classList.add("wrapper");
-		currentID = totalShown + 1;
+		currentID = data.totalShown + 1;
 		canvas = document.createElement("canvas");
 		canvas.width = "1024";
 		canvas.height = "1024";
@@ -93,8 +102,9 @@ async function displayMore() {
 		a.download = currentID + ".txt";
 		wrapper.appendChild(a);
 		gid("container").appendChild(wrapper);
-		totalShown++;
+		data.totalShown++;
 	}
+	data.displaying=false;
 }
 function gid(a) {
 	return document.getElementById(a);

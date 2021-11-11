@@ -5,10 +5,11 @@ window.data.displaying=false;
 window.data.totalShown = 0;
 
 const amountToShow = 100;
+const lastSeed = 1000;
 
+//displayMore();
 
-displayMore();
-
+gid("gen-btn").addEventListener("click",onClickGenBtn);
 
 // FOR LOADING DATA ON SCROLL
 window.addEventListener("scroll", () => {
@@ -75,8 +76,9 @@ async function generate(id, c) {
 }
 
 async function displayMore() {
-	if (data.displaying) {
-		console.log("previous function call still running");
+
+	if (data.displaying || !data.startPoint || (data.startPoint + data.totalShown)>lastSeed ) {
+
 		return;
 	}
 	data.displaying=true;
@@ -84,7 +86,11 @@ async function displayMore() {
 	for (var i = 0; i < amountToShow; i++) {
 		wrapper = document.createElement("div");
 		wrapper.classList.add("wrapper");
-		currentID = data.totalShown + 1;
+		currentID = data.startPoint + data.totalShown;
+		if (currentID>lastSeed) {
+			data.displaying=false;
+			return;
+		};
 		canvas = document.createElement("canvas");
 		canvas.width = "1024";
 		canvas.height = "1024";
@@ -97,7 +103,7 @@ async function displayMore() {
 		wrapper.appendChild(seed);
 		wrapper.appendChild(img);
 		a = document.createElement("a");
-		a.textContent = "^ Download ASCII for - " + currentID;
+		a.textContent = "Download source";
 		a.href = "results/" + currentID + ".txt";
 		a.download = currentID + ".txt";
 		wrapper.appendChild(a);
@@ -108,4 +114,24 @@ async function displayMore() {
 }
 function gid(a) {
 	return document.getElementById(a);
+}
+
+async function onClickGenBtn(){
+
+	const val = gid("gen-startpoint").value;
+	var correct = true;
+	try {
+		if (parseInt(val)<1 || parseInt(val)>lastSeed) {
+			correct = false;
+		}
+	} catch (err) {
+		console.error(err);
+		correct = false;
+	}
+	if (!correct) return;
+
+	data.startPoint=parseInt(val);
+
+	gid("input-container").style.display="none";
+	displayMore();
 }

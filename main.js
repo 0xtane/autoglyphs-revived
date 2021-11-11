@@ -120,6 +120,7 @@ async function onClickGenBtn(){
 
 	const val = gid("gen-startpoint").value;
 	var correct = true;
+	if (!val) return;
 	try {
 		if (parseInt(val)<1 || parseInt(val)>lastSeed) {
 			correct = false;

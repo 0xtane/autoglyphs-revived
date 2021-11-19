@@ -4,7 +4,7 @@ window.data={};
 window.data.displaying=false;
 window.data.totalShown = 0;
 
-const amountToShow = 100;
+const amountToShow = 200;
 const lastSeed = 1000;
 
 //displayMore();
@@ -15,7 +15,7 @@ gid("gen-btn").addEventListener("click",onClickGenBtn);
 window.addEventListener("scroll", () => {
 	const { scrollHeight, scrollTop, clientHeight } = document.documentElement;
 
-	if (scrollTop + clientHeight >= scrollHeight) {
+	if (scrollTop + clientHeight >= scrollHeight / 2) {
 		displayMore();
 	}
 });
@@ -28,6 +28,9 @@ async function fetchGlyphStrings() {
 	}
 
 	async function saveString(id) {
+		if (id==201) {
+			document.getElementById("gen-btn").disabled=false;
+		}
 		let glyphString = await (await fetch(`results/${id}.txt`)).text();
 		GlyphStrings[id]=glyphString;
 	}

@@ -23,8 +23,13 @@ window.addEventListener("scroll", () => {
 var GlyphStrings = [];
 
 async function fetchGlyphStrings() {
+	const timer = ms => new Promise(res => setTimeout(res, ms))
+
 	for (var i = 1;i<=lastSeed;i++) {
+
+
 		saveString(i);
+		await timer(4)
 	}
 
 	async function saveString(id) {
@@ -34,6 +39,7 @@ async function fetchGlyphStrings() {
 		let glyphString = await (await fetch(`results/${id}.txt`)).text();
 		GlyphStrings[id]=glyphString;
 	}
+
 }
 
 fetchGlyphStrings();

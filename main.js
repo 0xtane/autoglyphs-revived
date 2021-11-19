@@ -20,6 +20,21 @@ window.addEventListener("scroll", () => {
 	}
 });
 
+var GlyphStrings = [];
+
+async function fetchGlyphStrings() {
+	for (var i = 1;i<=lastSeed;i++) {
+		saveString(i);
+	}
+
+	async function saveString(id) {
+		let glyphString = await (await fetch(`results/${id}.txt`)).text();
+		GlyphStrings[id]=glyphString;
+	}
+}
+
+fetchGlyphStrings();
+
 /////////////////
 async function generate(id, c) {
 	x = c.getContext("2d");
@@ -28,7 +43,8 @@ async function generate(id, c) {
 	x.fillStyle = "white";
 	x.fillRect(0, 0, c.width, c.height);
 
-	let glyphString = await (await fetch(`results/${id}.txt`)).text();
+	//let glyphString = await (await fetch(`results/${id}.txt`)).text();
+	let glyphString = GlyphStrings[id];
 	//console.log(glyphString);
 
 	glyphString = glyphString.substring(30).split("%0A");
